@@ -5,7 +5,7 @@ import myModifier
 import pandas as pd
 
 verbose = True
-increased_instances = False
+increased_instances = True
 check_for_publications = False
 check_for_company_number = False
 
@@ -32,7 +32,11 @@ def extractCodes(text_file: str, company_number: str) -> dict[str: int]:
     if verbose:
         print(f"{text_file}")
     if "Nu am găsit nici un rezultat pentru" in content:
-        print("Degeaba")
+        print("Degeaba1")
+        print("\n\n")
+        return {}
+    if "Vezi rezultate pentru" in content:
+        print("Degeaba2")
         print("\n\n")
         return {}
     
@@ -165,25 +169,54 @@ def extractForCompanies(company_names: list[str], company_numbers: list[str]) ->
     result = {}
     print(len(company_names))
     for i in range(len(company_names)):
-        codes = extractCodes(f"{company_names[i]}.html", company_numbers[i])
-        # print(codes)
+        if len(company_numbers) != len(company_names):
+            codes = extractCodes(f"{company_names[i]}.html", "")
+        else:
+            codes = extractCodes(f"{company_names[i]}.html", company_numbers[i])
+        print(i)
 
         output = getCodesAndConfidence(codes)
         result.update({company_names[i]: output})
     return result
 
 import json
+from pathlib import Path
+
 if __name__ == "__main__":
+    
+# Specify the folder path
+    folder_path = Path("company files")
+    file_names = set([file.name[:-5] for file in folder_path.iterdir() if file.is_file()])
+
     company_names = []
     company_numbers = []
-    df = pd.read_csv("dataset.csv", low_memory=False)
-    search_range = [0, 200]
+    # A fost prea mare sa il urc pe github. Este 7 part 7 din septembrie 2026.
+    df = pd.read_csv("Companies House initial dataset.csv", low_memory=False)
+    search_range = [0, 824]
     names = df.iloc[search_range[0]:search_range[1], 0]
     numbers = df.iloc[search_range[0]:search_range[1], 1]
-    for name in names:
-        company_names.append(name)
-    for number in numbers:
-        company_numbers.append(number)
+
+    skipped = 0
+    for i in range(len(names)):
+        name = names[i]
+        number = numbers[i]
+        suffixless_name = myModifier.remove_suffixes(name)
+        # if suffixless_name == "THE SOCIETY OF HOMEOPATHS":
+        #     break
+        if suffixless_name in file_names:
+            company_names.append(suffixless_name)
+            company_numbers.append(number)
+        elif name in file_names:
+            company_names.append(name)
+            company_numbers.append(number)
+        else:
+            print("SKIPPED" + name)
+            skipped += 1
+    print(skipped)
+    # print(company_names)
+
+    # for number in numbers:
+    #     company_numbers.append(number)
 
     to_search = [myModifier.modify(q) for q in company_names]
     
@@ -194,7 +227,6 @@ if __name__ == "__main__":
     for company in result:
         if result.get(company)[2] != 0:
             print(result.get(company), company)
-
 
 
 # codes = extractCodes("the social group limited.txt")

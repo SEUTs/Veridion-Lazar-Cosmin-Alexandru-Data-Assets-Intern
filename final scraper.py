@@ -13,6 +13,7 @@ import pandas as pd
 import clipboard
 import myModifier
 
+
 def get_google_search_text(queries):
     # Aici ii dau setarile browser-ului si sa stie sa imi intre in contul meu de google
     options = Options()
@@ -42,8 +43,10 @@ def get_google_search_text(queries):
         driver.get("https://www.google.com")
         time.sleep(0.024) 
 
+        index = 0
         for q in queries:
-            print(f"SEARCHING FOR {q}")
+            print(f"SEARCHING FOR {index}: {q}")
+            index += 1
             removed_quotes = q
             removed_quotes = removed_quotes.replace("\"", "")
             pyautogui.hotkey('ctrl', 'l')
@@ -65,7 +68,7 @@ def get_google_search_text(queries):
             while "not a robot" in driver.page_source:
                 frequency = 2500
                 duration = 3000
-                winsound.Beep(frequency, duration)
+                # winsound.Beep(frequency, duration)
                 time.sleep(duration / 1000 + 5)
 
             element = WebDriverWait(driver, 10).until(
@@ -88,9 +91,11 @@ if __name__ == "__main__":
     # de test, ignorate dupa
     companies = ["marks and spencer", "the social group limited"]
     to_search = []
-    df = pd.read_csv("dataset.csv", low_memory=False)
-    for name in df.iloc[50:200, 0]:
-        to_search.append(name)
+    # A fost prea mare sa il urc pe github. Este 7 part 7 din septembrie 2026.
+    df = pd.read_csv("Companies House initial dataset.csv", low_memory=False)
+    for name in df.iloc[200:824, 0]:
+        suffixless_name = myModifier.remove_suffixes(name)
+        to_search.append(suffixless_name)
     print(to_search)
     get_google_search_text(to_search)
     
