@@ -1,4 +1,4 @@
-TLDR: Scraper de pe Google Search + Text Extractor cu filtre. results7.json contine rezultatele. 821 de companii cautate, 71 VAT-uri gasite, 36 (61%) True Positives, 25 (39%) False Positives, 6 (60%) True Negatives, 4 (40%) False Negatives din identificate 71 (9%) din 821. Pentru a lucra la o scara mai larga, ar trebui sa incerc sa accesez si documente, nu doar preview-ul de la rezultatele de pe Google. 
+TLDR: Scraper de pe Google Search + Text Extractor cu filtre. results7.json contine rezultatele. 821 de companii cautate, 71 VAT-uri gasite, 36 (61%) True Positives, 25 (39%) False Positives, 6 (60%) True Negatives, 4 (40%) False Negatives din identificate 71 (9%) din 821. Pentru a lucra la o scara mai larga, ar trebui sa incerc sa accesez si documente, nu doar preview-ul de la rezultatele de pe Google. Am ales aceasta abordare pentru ca Google deja s-a ocupat de crearea unui motor de cautare a datelor pe care le caut eu. Provocarea mea a fost sa filtrez toate rezultatele nedorite si eronate.
 
 
 
